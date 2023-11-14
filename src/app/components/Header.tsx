@@ -1,3 +1,4 @@
+import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,15 +26,16 @@ export default function Header({ photo }: { photo?: string | undefined }) {
           height={28}
         />
       ) : (
-        <a>
-          <Image
-            alt="Vercel Icon"
-            src="/vercel.svg"
-            className="sm:w-10 sm:h-[34px] w-8 h-[28px]"
-            width={32}
-            height={28}
-          />
-        </a>
+        // <a>
+        //   <Image
+        //     alt="Vercel Icon"
+        //     src="/vercel.svg"
+        //     className="sm:w-10 sm:h-[34px] w-8 h-[28px]"
+        //     width={32}
+        //     height={28}
+        //   />
+        // </a>
+        <UserButton afterSignOutUrl="/"/>
       )}
     </header>
   );
