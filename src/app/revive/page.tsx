@@ -35,12 +35,6 @@ const Revive = () => {
     mimeTypes: ["image/jpeg", "image/png", "image/jpg"],
     editor: { images: { crop: false } },
     styles: { colors: { primary: "#000" } },
-    onValidate: async (file: File): Promise<undefined | string> => {
-      // if(data.remaningGenerations === 0){
-      //     return "No more generations left for the day."
-      // }
-      return undefined;
-    },
   };
   async function generateImage(fileUrl: string) {
     await new Promise((resolve) => setTimeout(resolve, 500));
@@ -55,29 +49,13 @@ const Revive = () => {
     });
 
     let newImage = await res.json();
-    if (res.status !== 200) {
+    if (res.status !== 201) {
       setError(newImage);
     } else {
-      // mutate();
       setRevivedImage(newImage);
     }
     setLoading(false);
   }
-  const UploadDropZone = () => {
-    <UploadDropzone
-      uploader={uploader}
-      options={options}
-      onUpdate={(file) => {
-        if (file.length !== 0) {
-          setImageName(file[0].originalFile.originalFileName);
-          setOriginalImage(file[0].fileUrl.replace("raw", "thumbnail"));
-          generateImage(file[0].fileUrl.replace("raw", "thumbnail"));
-        }
-      }}
-      width="670px"
-      height="250px"
-    />;
-  };
 
   return (
     <div className="flex max-w-6xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
@@ -122,7 +100,20 @@ const Revive = () => {
               />
             </div>
           ) : isSignedIn && !originalImage ? (
-            <UploadDropzone options={options} uploader={uploader} />
+            <UploadDropzone
+              uploader={uploader}
+              options={options}
+              onUpdate={(file) => {
+                console.log(file);
+                if (file.length !== 0) {
+                  setImageName(file[0].originalFile.originalFileName);
+                  setOriginalImage(file[0].fileUrl.replace("raw", "thumbnail"));
+                  generateImage(file[0].fileUrl.replace("raw", "thumbnail"));
+                }
+              }}
+              width="670px"
+              height="250px"
+            />
           ) : (
             !originalImage && (
               <div className="h-[250px] flex flex-col items-center space-y-6 max-w-[670px] -mt-8">
@@ -145,56 +136,87 @@ const Revive = () => {
             )
           )}
           {originalImage && !revivedImage && (
-                    <Image alt="original image" src={originalImage} className="rounded-2xl" width={475} height={475}/>
-                )}
-                {revivedImage && originalImage && !sideBySide && (
-                    <div className="flex sm:space-x-4 sm:flex-row flex-col">
-                        <div>
-                            <h2 className="mb-1 font-medium text-lg">Original Image</h2>
-                            <Image alt="Original Image" src={originalImage} className="rounded-2xl relative" width={475} height={475}/>
-                        </div>
-                        <div className="sm:mt-0 mt-8">
-                            <h2 className="mb-1 font-medium text-lg">Revived Image</h2>
-                            <a href={revivedImage} target="_blank" rel="noreferrer">
-                                <Image alt="revived image" src={revivedImage} className="rounded-2xl relative sm:mt-0 mt-2 cursor-zoom-in" width={475} height={475} onLoadingComplete={() => setRevivedLoaded(true)}/>
-                            </a>
-                        </div>
-                    </div>
-                )}
-                {loading && (
-                    <button disabled className="bg-black rounded-full text-white font-medium px-4 pt-2 pb-3 mt-8 hover:bg-black/80 w-40">
-                        <span className="pt-4"></span>
-                    </button>
-                )}
-                {error && (
-                    <div className="bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded-xl mt-8 max-w-[575px]" role="alert">
-                        <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
-                            Please try again in 24 hours.
-                        </div>
-                        <div className="border border-t-0 border-red-400 bg-red-100 px-4 py-3 text-red-700">
-                            {error}
-                        </div>
-                    </div>
-                )}
-                <div className="flex space-x-2 justify-center">
-                    {originalImage && !loading && (
-                        <button onClick={() => {
-                            setOriginalImage(null)
-                            setRevivedImage(null)
-                            setRevivedLoaded(false)
-                            setError(null)
-                        }} className="bg-black rounded-full text-white font-medium px-4 py-2 mt-8 hover:bg-black/80 transition">
-                            Upload New Image
-                        </button>
-                    )}
-                    {revivedLoaded && (
-                        <button onClick={() => {
-                            downloadImage(revivedImage!, appendNewToName(imageName!))
-                        }} className="bg-white rounded-full text-black border font-medium px-4 py-2 mt-8 hover:bg-gray-100 transition">
-                            Download Revived Image
-                        </button>
-                    )}
-                </div>
+            <Image
+              alt="original image"
+              src={originalImage}
+              className="rounded-2xl"
+              width={475}
+              height={475}
+            />
+          )}
+          {revivedImage && originalImage && !sideBySide && (
+            <div className="flex sm:space-x-4 sm:flex-row flex-col">
+              <div>
+                <h2 className="mb-1 font-medium text-lg">Original Image</h2>
+                <Image
+                  alt="Original Image"
+                  src={originalImage}
+                  className="rounded-2xl relative"
+                  width={475}
+                  height={475}
+                />
+              </div>
+              <div className="sm:mt-0 mt-8">
+                <h2 className="mb-1 font-medium text-lg">Revived Image</h2>
+                <a href={revivedImage} target="_blank" rel="noreferrer">
+                  <Image
+                    alt="revived image"
+                    src={revivedImage}
+                    className="rounded-2xl relative sm:mt-0 mt-2 cursor-zoom-in"
+                    width={475}
+                    height={475}
+                    onLoadingComplete={() => setRevivedLoaded(true)}
+                  />
+                </a>
+              </div>
+            </div>
+          )}
+          {loading && (
+            <button
+              disabled
+              className="bg-black rounded-full text-white font-medium px-4 pt-2 pb-3 mt-8 hover:bg-black/80 w-40"
+            >
+              <span className="pt-4"></span>
+            </button>
+          )}
+          {error && (
+            <div
+              className="bg-red-100 border-red-400 text-red-700 px-4 py-3 rounded-xl mt-8 max-w-[575px]"
+              role="alert"
+            >
+              <div className="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+                Please try again in 24 hours.
+              </div>
+              <div className="border border-t-0 border-red-400 bg-red-100 px-4 py-3 text-red-700">
+                {error}
+              </div>
+            </div>
+          )}
+          <div className="flex space-x-2 justify-center">
+            {originalImage && !loading && (
+              <button
+                onClick={() => {
+                  setOriginalImage(null);
+                  setRevivedImage(null);
+                  setRevivedLoaded(false);
+                  setError(null);
+                }}
+                className="bg-black rounded-full text-white font-medium px-4 py-2 mt-8 hover:bg-black/80 transition"
+              >
+                Upload New Image
+              </button>
+            )}
+            {revivedLoaded && (
+              <button
+                onClick={() => {
+                  downloadImage(revivedImage!, appendNewToName(imageName!));
+                }}
+                className="bg-white rounded-full text-black border font-medium px-4 py-2 mt-8 hover:bg-gray-100 transition"
+              >
+                Download Revived Image
+              </button>
+            )}
+          </div>
         </div>
       </main>
       <Footer />
