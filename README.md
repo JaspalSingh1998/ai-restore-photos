@@ -1,36 +1,46 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Restore Images
+
+Welcome to the AI Restore Images - a Next.js application designed to transform your blurry images into clear, high-quality pictures! This app leverages the powerful GFPGAN model from Replicate.io to enhance image quality, ensuring your memories are always crystal clear.
+
+![Restore Images Screenshot](./public/shot.png)
+
+## Features
+
+- **Image Enhancement**: Utilizing the GFPGAN model, this application can turn blurry and low-resolution images into sharper, clearer versions.
+- **User Authentication**: Integrated with Clerk for secure and easy user authentication.
+- **Easy Upload**: Thanks to React Uploader Zone, users can effortlessly drag and drop images into a beautifully designed dropzone.
 
 ## Getting Started
 
-First, run the development server:
+To get started with the Blurry Image Fixer, follow these steps:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Prerequisites
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Node.js
+- npm or yarn
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/JaspalSingh1998/ai-restore-photos 
 
-## Learn More
+2. npm install
 
-To learn more about Next.js, take a look at the following resources:
+    or
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+    yarn install
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+3. npm run dev
 
-## Deploy on Vercel
+    or
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    yarn dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Usage
+1. Sign up or log in using the Clerk authentication service.
+2. Drag and drop your blurry image into the React Uploader Zone.
+3. Wait for the magic to happen! The GFPGAN model will process your image and enhance its quality.
+4. Download or share your enhanced image.
+
+P.S: Use .env.example as a reference to update your own API keys.
